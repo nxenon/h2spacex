@@ -5,7 +5,7 @@ authors = [
   { name="nxenon", email="nasiri.aminm@gmail.com" },
 ]
 license = { text="GPL-3.0" }
-description = "HTTP/2 Single Packet Attack low level library based on Scap"
+description = "HTTP/2 Single Packet Attack low level library based on Scapy"
 readme = "README.md"
 keywords = ["race-condition", "http2", "single-packet-attack"]
 requires-python = ">=3.10"
