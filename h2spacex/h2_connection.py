@@ -13,6 +13,7 @@ class H2Connection:
         self.port_number = port_number  # e.g 443
         self.raw_socket = None  # raw socket object
         self.read_timeout = read_timeout  # timeout when reading response from socket
+        self.last_used_stream_id = 1  # define last stream ID used to continue stream IDs
         # HTTP/2 Connection Preface
         self.H2_PREFACE = hex_bytes('505249202a20485454502f322e300d0a0d0a534d0d0a0d0a')
         self.DEFAULT_SETTINGS = {
@@ -156,6 +157,26 @@ class H2Connection:
 
         self.send_bytes(bytes(client_initial_settings_frame))
         print('client initial settings frame sent: ' + str(client_initial_settings_frame))
+
+    def generate_stream_ids(self, number_of_streams):
+        """
+        generate stream IDs by checking self.last_used_stream_id (incremental) just odd stream IDs
+        :param number_of_streams:
+        :return:
+        """
+
+        if self.last_used_stream_id % 2 == 0:
+            self.last_used_stream_id += 1
+
+        start_stream_id = self.last_used_stream_id + 2
+        end_stream_id = (number_of_streams * 2) + start_stream_id
+        stream_ids_list = []
+        for i in range(start_stream_id, end_stream_id, 2):
+            stream_ids_list.append(i)
+
+        self.last_used_stream_id = stream_ids_list[-1]
+        return stream_ids_list
+
 
     def create_single_packet_http2_post_request_frames(
             self,
