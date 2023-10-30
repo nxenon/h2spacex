@@ -1,8 +1,7 @@
 # H2SpaceX
-[![pypi: 0.1.4](https://img.shields.io/badge/pypi-0.1.4-8c34eb.svg)](LICENSE)
-[![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](LICENSE)
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-34d5eb.svg)](LICENSE)
-
+[![pypi: 0.1.4](https://img.shields.io/badge/pypi-0.1.4-8c34eb.svg)](https://pypi.org/project/h2spacex/)
+[![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](https://www.python.org)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
 HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
 
