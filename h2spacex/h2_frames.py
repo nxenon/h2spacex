@@ -133,7 +133,7 @@ def parse_response_frames_bytes(
             elif isinstance(f.payload, NoPayload):
                 if f.type == 4:  # settings frame
                     if 'A' in f.flags:
-                        print('server sent ACK for client Settings')
+                        print('* server sent ACK for client Settings')
 
             else:
                 print('--frame--')

@@ -156,7 +156,7 @@ class H2Connection:
         client_initial_settings_frame = h2_frames.create_settings_frame(settings=settings_list)
 
         self.send_bytes(bytes(client_initial_settings_frame))
-        print('client initial settings frame sent: ' + str(client_initial_settings_frame))
+        print('* client initial settings frame sent: ' + str(client_initial_settings_frame))
 
     def generate_stream_ids(self, number_of_streams):
         """
