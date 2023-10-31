@@ -1,4 +1,5 @@
-# H2SpaceX
+# <img src="https://github.com/nxenon/h2spacex/assets/61124903/fd6387bf-15e8-4a5d-816b-cf5e079e07cc" width="64" valign="middle" alt="Scapy" />&nbsp;&nbsp; H2SpaceX
+
 [![pypi: 0.1.4](https://img.shields.io/badge/pypi-0.1.4-8c34eb.svg)](https://pypi.org/project/h2spacex/)
 [![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
