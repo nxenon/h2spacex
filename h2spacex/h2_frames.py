@@ -163,3 +163,15 @@ def create_ping_frame(ping_data='12345678', is_ack=0):
 
     ping_frame = ping_frame / h2.H2PingFrame(ping_data)
     return ping_frame
+
+
+def create_go_away_frame(err_code=0, _last_stream_id=0, _stream_id=0):
+    """
+    create H2 GOAWAY frame to shut down the connection gracefully
+    :param err_code:
+    :param _last_stream_id:
+    :param _stream_id:
+    :return:
+    """
+    go_away_frame = h2.H2Frame(stream_id=_stream_id) / h2.H2GoAwayFrame(last_stream_id=_last_stream_id, error=err_code)
+    return go_away_frame

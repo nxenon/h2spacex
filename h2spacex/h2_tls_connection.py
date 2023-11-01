@@ -2,6 +2,7 @@
 HTTP/2 Connection on TLS Context
 """
 from h2spacex.h2_connection import H2Connection
+from h2spacex import h2_frames
 import ssl
 
 
@@ -27,11 +28,14 @@ class H2OnTlsConnection(H2Connection):
         close the connection
         :return:
         """
+        go_away_frame = h2_frames.create_go_away_frame(err_code=0)
+        self.send_bytes(bytes(go_away_frame))
         self.tls_socket.close()
         self.raw_socket.close()
         self.raw_socket = None
         self.tls_socket = None
         self.is_connection_closed = True
+        print('* connection closed')
 
     def __create_tls_context_on_raw_socket(self):
         # Create SSL context

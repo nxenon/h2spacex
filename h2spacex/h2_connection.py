@@ -176,6 +176,8 @@ class H2Connection:
         close the connection
         :return:
         """
+        go_away_frame = h2_frames.create_go_away_frame(err_code=0)
+        self.send_bytes(bytes(go_away_frame))
         self.raw_socket.close()
         self.raw_socket = None
         self.is_connection_closed = True
