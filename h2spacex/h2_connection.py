@@ -1,11 +1,11 @@
 """
 HTTP/2 Connection
 """
-from scapy.all import hex_bytes
 import socket
-import scapy.contrib.http2 as h2
-from h2spacex import h2_frames, utils
 from threading import Thread
+import scapy.contrib.http2 as h2
+from scapy.all import hex_bytes
+from h2spacex import h2_frames, utils
 
 
 class H2Connection:
@@ -15,6 +15,7 @@ class H2Connection:
         self.raw_socket = None  # raw socket object
         self.read_timeout = read_timeout  # timeout when reading response from socket
         self.last_used_stream_id = 1  # define last stream ID used to continue stream IDs
+        self.is_connection_closed = True  # if connection is not closed, this variable is False
         # HTTP/2 Connection Preface
         self.H2_PREFACE = hex_bytes('505249202a20485454502f322e300d0a0d0a534d0d0a0d0a')
         self.DEFAULT_SETTINGS = {
@@ -56,13 +57,20 @@ class H2Connection:
         :param _timeout:
         :return:
         """
-        while True:
-            resp = self.read_response_from_socket(_timeout=_timeout)
-            if resp:
-                self.parse_frames_bytes(resp)
+        try:
+            while not self.is_connection_closed:
+                resp = self.read_response_from_socket(_timeout=_timeout)
+                if resp:
+                    self.parse_frames_bytes(resp)
 
-    def start_thread_response_parsing(self):
-        Thread(target=self.__thread_response_frame_parsing, args=[]).start()
+        except KeyboardInterrupt:
+            exit()
+
+    def start_thread_response_parsing(self, _timeout=0.5):
+        try:
+            Thread(target=self.__thread_response_frame_parsing, args=(_timeout,)).start()
+        except KeyboardInterrupt:
+            exit()
 
     def _create_raw_socket(self):
         """
@@ -97,7 +105,10 @@ class H2Connection:
         :return:
         """
         using_socket = self.get_using_socket()
-        using_socket.send(bytes_data)
+        try:
+            using_socket.send(bytes_data)
+        except Exception as e:
+            print('Error in sending bytes: ' + str(e))
 
     def send_frames(self, frames):
         """
@@ -106,7 +117,7 @@ class H2Connection:
         :return:
         """
         using_socket = self.get_using_socket()
-        using_socket.send(bytes(frames))
+        self.send_bytes(bytes(frames))
 
     def read_response_from_socket(self, _timeout=None) -> bytes:
         """
@@ -120,7 +131,12 @@ class H2Connection:
             timeout = _timeout
 
         using_socket = self.get_using_socket()
-        using_socket.settimeout(timeout)
+        try:
+            using_socket.settimeout(timeout)
+
+        except Exception as e:
+            return b''
+
         response = b''
         while True:
             try:
@@ -154,6 +170,15 @@ class H2Connection:
         """
         ping_frame = h2_frames.create_ping_frame(ping_data=ping_data)
         self.send_bytes(bytes(ping_frame))
+
+    def close_connection(self):
+        """
+        close the connection
+        :return:
+        """
+        self.raw_socket.close()
+        self.raw_socket = None
+        self.is_connection_closed = True
 
     def _send_client_initial_settings_frame(self):
         """

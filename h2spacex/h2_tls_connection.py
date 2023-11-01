@@ -11,10 +11,27 @@ class H2OnTlsConnection(H2Connection):
         self.tls_socket = None  # TLS Socket Context
 
     def setup_connection(self):
-        self._create_raw_socket()  # set raw_socket object
-        self.__create_tls_context_on_raw_socket()  # set tls_socket object
-        self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
-        self._send_client_initial_settings_frame()  # send client initial settings frame to server
+        try:
+            self._create_raw_socket()  # set raw_socket object
+            self.__create_tls_context_on_raw_socket()  # set tls_socket object
+            self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
+            self._send_client_initial_settings_frame()  # send client initial settings frame to server
+        except Exception as e:
+            print('Error occurred : ' + str(e))
+
+        else:
+            self.is_connection_closed = False
+
+    def close_connection(self):
+        """
+        close the connection
+        :return:
+        """
+        self.tls_socket.close()
+        self.raw_socket.close()
+        self.raw_socket = None
+        self.tls_socket = None
+        self.is_connection_closed = True
 
     def __create_tls_context_on_raw_socket(self):
         # Create SSL context
