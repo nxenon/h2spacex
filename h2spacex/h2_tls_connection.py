@@ -11,12 +11,12 @@ class H2OnTlsConnection(H2Connection):
         self.tls_socket = None  # TLS Socket Context
 
     def setup_connection(self):
-        self.create_raw_socket()  # set raw_socket object
-        self.create_tls_context_on_raw_socket()  # set tls_socket object
-        self.send_h2_connection_preface()  # send HTTP/2 Connection Preface
-        self.send_client_initial_settings_frame()  # send client initial settings frame to server
+        self._create_raw_socket()  # set raw_socket object
+        self.__create_tls_context_on_raw_socket()  # set tls_socket object
+        self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
+        self._send_client_initial_settings_frame()  # send client initial settings frame to server
 
-    def create_tls_context_on_raw_socket(self):
+    def __create_tls_context_on_raw_socket(self):
         # Create SSL context
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
         ssl_context.check_hostname = False

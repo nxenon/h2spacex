@@ -5,6 +5,7 @@ from scapy.all import hex_bytes
 import socket
 import scapy.contrib.http2 as h2
 from h2spacex import h2_frames, utils
+from threading import Thread
 
 
 class H2Connection:
@@ -49,7 +50,21 @@ class H2Connection:
         :return:
         """
 
-    def create_raw_socket(self):
+    def __thread_response_frame_parsing(self, _timeout=0.5):
+        """
+        method which is thread oriented for response parsing
+        :param _timeout:
+        :return:
+        """
+        while True:
+            resp = self.read_response_from_socket(_timeout=_timeout)
+            if resp:
+                self.parse_frames_bytes(resp)
+
+    def start_thread_response_parsing(self):
+        Thread(target=self.__thread_response_frame_parsing, args=[]).start()
+
+    def _create_raw_socket(self):
         """
         create raw socket and return it
         :return:
@@ -64,7 +79,7 @@ class H2Connection:
         sock_addr = raw_socket.getsockname()
         print(f'* connected to: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
 
-    def send_h2_connection_preface(self):
+    def _send_h2_connection_preface(self):
         self.send_bytes(self.H2_PREFACE)
         print('* H2 connection preface sent')
 
@@ -140,7 +155,7 @@ class H2Connection:
         ping_frame = h2_frames.create_ping_frame(ping_data=ping_data)
         self.send_bytes(bytes(ping_frame))
 
-    def send_client_initial_settings_frame(self):
+    def _send_client_initial_settings_frame(self):
         """
         send client initial settings to the server
         :return:
