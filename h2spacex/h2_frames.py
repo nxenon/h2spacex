@@ -128,7 +128,10 @@ def parse_response_frames_bytes(
                     print('* client sent ACK for server Settings')
 
             elif isinstance(f.payload, h2.H2WindowUpdateFrame):
-                pass
+                print('* server sent WindowUpdate Frame with win_increase_size of: ' + str(f.win_size_incr))
+
+            elif isinstance(f.payload, h2.H2PingFrame):
+                print('* server sent ACK for PING frame')
 
             elif isinstance(f.payload, NoPayload):
                 if f.type == 4:  # settings frame
