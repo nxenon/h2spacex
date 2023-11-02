@@ -85,11 +85,11 @@ class H2Connection:
 
         self.raw_socket = raw_socket
         sock_addr = raw_socket.getsockname()
-        print(f'* connected to: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
+        print(f'+ Connected to: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
 
     def _send_h2_connection_preface(self):
         self.send_bytes(self.H2_PREFACE)
-        print('* H2 connection preface sent')
+        print('+ H2 connection preface sent')
 
     def get_using_socket(self):
         """
@@ -108,7 +108,7 @@ class H2Connection:
         try:
             using_socket.send(bytes_data)
         except Exception as e:
-            print('Error in sending bytes: ' + str(e))
+            print('# Error in sending bytes: ' + str(e))
 
     def send_frames(self, frames):
         """
@@ -149,7 +149,7 @@ class H2Connection:
 
         return response
 
-    def parse_frames_bytes(self, frame_bytes, is_verbose=False):
+    def old_parse_frames_bytes(self, frame_bytes, is_verbose=False):
         """
         parse frames bytes. for example parse response frames from server
         :param frame_bytes: bytes type of frames
@@ -198,7 +198,9 @@ class H2Connection:
         client_initial_settings_frame = h2_frames.create_settings_frame(settings=settings_list)
 
         self.send_bytes(bytes(client_initial_settings_frame))
-        print('* client initial settings frame sent: ' + str(client_initial_settings_frame))
+        print('+ Client initial SETTINGS frame sent: ')
+        print('// SETTINGS //')
+        print(self.DEFAULT_SETTINGS)
 
     def generate_stream_ids(self, number_of_streams):
         """
@@ -218,7 +220,6 @@ class H2Connection:
 
         self.last_used_stream_id = stream_ids_list[-1]
         return stream_ids_list
-
 
     def create_single_packet_http2_post_request_frames(
             self,
