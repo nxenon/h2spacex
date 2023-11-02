@@ -18,7 +18,7 @@ class H2OnTlsConnection(H2Connection):
             self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
             self._send_client_initial_settings_frame()  # send client initial settings frame to server
         except Exception as e:
-            print('Error occurred : ' + str(e))
+            print('# Error in setting the connection up : ' + str(e))
 
         else:
             self.is_connection_closed = False
@@ -35,7 +35,7 @@ class H2OnTlsConnection(H2Connection):
         self.raw_socket = None
         self.tls_socket = None
         self.is_connection_closed = True
-        print('* connection closed')
+        print('- Connection closed')
 
     def __create_tls_context_on_raw_socket(self):
         # Create SSL context
@@ -47,7 +47,7 @@ class H2OnTlsConnection(H2Connection):
         # Wrap the raw socket with SSL/TLS
         ssl_socket = ssl_context.wrap_socket(self.raw_socket, server_hostname=self.hostname)
         self.tls_socket = ssl_socket
-        print('* TLS connection established')
+        print('+ TLS connection established')
 
     def get_using_socket(self):
         """
