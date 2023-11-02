@@ -1,6 +1,6 @@
 # <img src="https://github.com/nxenon/h2spacex/assets/61124903/fd6387bf-15e8-4a5d-816b-cf5e079e07cc" width="10%" valign="middle" alt="Scapy" />&nbsp;&nbsp; H2SpaceX
 
-[![pypi: 0.1.8.1](https://img.shields.io/badge/pypi-0.1.8.1-8c34eb.svg)](https://pypi.org/project/h2spacex/)
+[![pypi: 0.1.9](https://img.shields.io/badge/pypi-0.1.9-8c34eb.svg)](https://pypi.org/project/h2spacex/)
 [![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
@@ -16,8 +16,13 @@ HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
   - [ ] Content-Length: 1 Method
   - [ ] POST Request with x-override-method: GET header
   - [ ] test functionality on different H2 frameworks
-- Threading Response Parsing
+- Response Parsing
   - [ ] implement
+  - [ ] implement threaded response parser
+  - [x] Body Decompression
+    - [x] gzip
+    - [x] br
+    - [x] deflate
 
 # Installation
 H2SpaceX works with Python 3 (preferred: >=3.10)

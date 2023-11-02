@@ -1,6 +1,6 @@
 [project]
 name = "h2spacex"
-version = "0.1.8.1"
+version = "0.1.9"
 authors = [
   { name="nxenon", email="nasiri.aminm@gmail.com" },
 ]
@@ -10,7 +10,8 @@ readme = "README.md"
 keywords = ["race-condition", "http2", "single-packet-attack"]
 requires-python = ">=3.10"
 dependencies = [
-    "scapy==2.4.3"
+    "scapy==2.4.3",
+    "brotlipy==0.7.0"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
