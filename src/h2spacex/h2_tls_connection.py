@@ -1,8 +1,8 @@
 """
 HTTP/2 Connection on TLS Context
 """
-from h2spacex.h2_connection import H2Connection
-from h2spacex import h2_frames
+from .h2_connection import H2Connection
+from . import h2_frames
 import ssl
 
 
