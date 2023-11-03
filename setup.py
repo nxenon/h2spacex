@@ -5,7 +5,7 @@ with open('./README.md', 'r') as readme_file:
 
 setup(
     name='h2spacex',
-    version='0.1.13',
+    version='0.1.14',
     description='HTTP/2 Single Packet Attack low level library based on Scapy',
     package_dir={"": "src"},
     packages=find_packages(where="src"),
