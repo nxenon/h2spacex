@@ -5,10 +5,10 @@ with open('./README.md', 'r') as readme_file:
 
 setup(
     name='h2spacex',
-    version='0.1.9',
+    version='0.1.11',
     description='HTTP/2 Single Packet Attack low level library based on Scapy',
-    package_dir={"": "h2spacex"},
-    packages=find_packages(where="h2spacex"),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/nxenon/h2spacex',
