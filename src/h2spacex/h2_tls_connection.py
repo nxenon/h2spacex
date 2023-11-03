@@ -19,6 +19,7 @@ class H2OnTlsConnection(H2Connection):
             self._send_client_initial_settings_frame()  # send client initial settings frame to server
         except Exception as e:
             print('# Error in setting the connection up : ' + str(e))
+            exit(1)
 
         else:
             self.is_connection_closed = False

@@ -104,6 +104,8 @@ class H2Connection:
         :param bytes_data: bytes data for sending into socket
         :return:
         """
+        if self.is_connection_closed:
+            return
         using_socket = self.get_using_socket()
         try:
             using_socket.send(bytes_data)

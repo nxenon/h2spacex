@@ -55,7 +55,7 @@ class FrameParser:
         self.h2_connection = h2_connection
         self.headers_table = h2.HPackHdrTable()
 
-    def show_response_of_sent_of_sent_requests(self):
+    def show_response_of_sent_requests(self):
         for s_id in self.headers_and_data_frames.keys():
             headers = self.headers_and_data_frames[s_id]['header']
             print(f'#-    Stream ID: {s_id}   -#')
