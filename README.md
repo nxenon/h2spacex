@@ -17,7 +17,7 @@ HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
   - [ ] POST Request with x-override-method: GET header
   - [ ] test functionality on different H2 frameworks
 - Response Parsing
-  - [ ] implement
+  - [x] implement
   - [ ] implement threaded response parser
   - [x] Body Decompression
     - [x] gzip
