@@ -108,12 +108,15 @@ class FrameParser:
                     f.show()
                     print('##frame##')
 
-
     def parse_settings_frame(self, settings_frame):
         if 'A' in settings_frame.flags:
             print('* Server sent ACK for client SETTINGS frame')
 
         else:
+            print('* Server sent Settings frame with following values:')
+            print('// Server SETTINGS //')
+            print(settings_frame.settings)
+            print()
             ack_settings_frame = create_settings_frame(is_ack=1)
             self.send_frame(ack_settings_frame)
             print('+ Client sent ACK for server SETTINGS frame')
