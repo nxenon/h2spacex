@@ -26,6 +26,21 @@ HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
 - [Proxy](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples#proxy-example)
   - [x] Socks5 Proxy
 
+# More Research
+Some following statements are just ideas and not testes or implemented.
+
+- More Request in a Single Packet
+  - Increase MSS (Idea by James Kettle)
+  - Out of Order TCP Packets (Idea by James Kettle)
+  - IP Fragmentation
+- Proxy the Single Packet Request through SOCKS
+- Single Packet Attack on GET Requests
+  - Content-Length: 1 Method (Idea by James Kettle)
+  - x-override-method: GET Method (Idea by James Kettle)
+  - Index HPACK Headers to Make GET Requests Smaller
+  - HEADERS Frame without END_HEADER Flag
+  - HEADERS Frame Without Some Pseudo Headers
+
 # Installation
 H2SpaceX works with Python 3 (preferred: >=3.10)
 
