@@ -15,7 +15,8 @@ keywords = ["race-condition", "http2", "single-packet-attack"]
 requires-python = ">=3.10"
 dependencies = [
     "scapy==2.4.3",
-    "brotlipy==0.7.0"
+    "brotlipy==0.7.0",
+    "PySocks==1.7.1"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

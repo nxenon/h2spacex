@@ -23,6 +23,8 @@ HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
     - [x] gzip
     - [x] br
     - [x] deflate
+- [Proxy](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples#proxy-example)
+  - [x] Socks5 Proxy
 
 # Installation
 H2SpaceX works with Python 3 (preferred: >=3.10)

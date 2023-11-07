@@ -7,13 +7,13 @@ import ssl
 
 
 class H2OnTlsConnection(H2Connection):
-    def __init__(self, hostname, port_number):
-        super().__init__(hostname, port_number)
+    def __init__(self, hostname, port_number, read_timeout=3, proxy_hostname=None, proxy_port_number=None):
+        super().__init__(hostname, port_number, read_timeout=read_timeout, proxy_hostname=proxy_hostname, proxy_port_number=proxy_port_number)
         self.tls_socket = None  # TLS Socket Context
 
     def setup_connection(self):
         try:
-            self._create_raw_socket()  # set raw_socket object
+            self._create_raw_socket()
             self.__create_tls_context_on_raw_socket()  # set tls_socket object
             self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
             self._send_client_initial_settings_frame()  # send client initial settings frame to server

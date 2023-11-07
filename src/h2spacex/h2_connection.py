@@ -6,12 +6,15 @@ from threading import Thread
 import scapy.contrib.http2 as h2
 from scapy.all import hex_bytes
 from . import h2_frames, utils
+import socks
 
 
 class H2Connection:
-    def __init__(self, hostname, port_number, read_timeout=3):
+    def __init__(self, hostname, port_number, read_timeout=3, proxy_hostname=None, proxy_port_number=None):
         self.hostname = hostname  # e.g http2.github.io
         self.port_number = port_number  # e.g 443
+        self.proxy_hostname = proxy_hostname  # proxy hostname e.g 127.0.0.1
+        self.proxy_port_number = proxy_port_number  # proxy port e.g 10808
         self.raw_socket = None  # raw socket object
         self.read_timeout = read_timeout  # timeout when reading response from socket
         self.last_used_stream_id = 1  # define last stream ID used to continue stream IDs
@@ -61,7 +64,7 @@ class H2Connection:
             while not self.is_connection_closed:
                 resp = self.read_response_from_socket(_timeout=_timeout)
                 if resp:
-                    self.parse_frames_bytes(resp)
+                    self.old_parse_frames_bytes(resp)
 
         except KeyboardInterrupt:
             exit()
@@ -72,11 +75,31 @@ class H2Connection:
         except KeyboardInterrupt:
             exit()
 
+    def _create_socks_socket(self):
+        """
+        create a SOCKS5 Socket with self.proxy_hostname and self.proxy_port_number
+        set the self.raw_socket to created SOCKS5
+        :return:
+        """
+
+        socks.set_default_proxy(socks.SOCKS5, self.proxy_hostname, self.proxy_port_number)
+        socket.socket = socks.socksocket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 0)
+        sock.connect((self.hostname, self.port_number))
+        self.raw_socket = sock
+        sock_addr = sock.getsockname()
+        print(f'+ Connected through Proxy: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
+
     def _create_raw_socket(self):
         """
         create raw socket and return it
         :return:
         """
+
+        if self.proxy_hostname:
+            self._create_socks_socket()
+            return
 
         raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Enable Nagle algorithm
