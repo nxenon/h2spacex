@@ -345,6 +345,48 @@ class H2Connection:
 
         return get_request_frames
 
+    def create_simple_http2_request(
+            self,
+            method,
+            authority,
+            scheme,
+            path,
+            headers_string,
+            stream_id,
+            body=None,
+            check_headers_lowercase=True,
+    ):
+        """
+        create simple http/2 request(Headers Frame + Data(Optional)) and return the frames
+        :param method: method of the request. e.g. GET
+        :param authority: equivalent of host header in http/1. e.g. google.com
+        :param scheme: http or https
+        :param path: request path. e.g. /index.html
+        :param headers_string: headers in request. split with \n --> user-agent: xxx\n
+        :param stream_id: stream id of the request
+        :param body: if the request method is not get, then it needs to have body
+        :param check_headers_lowercase:  if this is True, the headers names will be checked to be lowercase
+        :return:
+        """
+
+        if body:
+            body = bytes(body, 'utf-8')
+
+        if check_headers_lowercase:
+            headers_string = utils.make_header_names_small(headers_string)
+
+        request_frames = h2_frames.create_headers_frame(
+            method=method,
+            authority=authority,
+            scheme=scheme,
+            path=path,
+            headers_string=headers_string,
+            stream_id=stream_id,
+            body=body,
+        )
+
+        return request_frames
+
     def send_simple_http2_request(
             self,
             method,
