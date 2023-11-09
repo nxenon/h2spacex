@@ -340,3 +340,13 @@ def create_go_away_frame(err_code=0, _last_stream_id=0, _stream_id=0):
     """
     go_away_frame = h2.H2Frame(stream_id=_stream_id) / h2.H2GoAwayFrame(last_stream_id=_last_stream_id, error=err_code)
     return go_away_frame
+
+
+def create_reset_stream_frame(stream_id, error_code=0):
+    """
+    :param stream_id: Stream ID to cancel
+    :param error_code: Error Codes. See https://scapy.readthedocs.io/en/latest/api/scapy.contrib.http2.html#scapy.contrib.http2.H2ErrorCodes # noqa: E501
+    :return:
+    """
+    reset_frame = h2.H2Frame(stream_id=stream_id) / h2.H2ResetFrame(error=error_code)
+    return reset_frame
