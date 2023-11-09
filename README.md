@@ -27,7 +27,7 @@ HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
   - [x] Socks5 Proxy
 
 # More Research
-Some following statements are just ideas and not testes or implemented.
+Some following statements are just ideas and not tested or implemented.
 
 - More Request in a Single Packet
   - Increase MSS (Idea by James Kettle)
