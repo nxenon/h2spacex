@@ -4,7 +4,7 @@
 [![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
-HTTP/2 Single Packet Attack (Race Condition) low level library based on Scapy
+HTTP/2 low level library based on Scapy which can be used for Single Packet Attack (Race Condition on H2)
 
 # TODO
 
