@@ -354,6 +354,7 @@ class H2Connection:
             headers_string,
             stream_id,
             body=None,
+            check_headers_lowercase=True,
     ):
         """
         send simple http/2 request(Headers Frame + Data(Optional))
@@ -364,11 +365,15 @@ class H2Connection:
         :param headers_string: headers in request. split with \n --> user-agent: xxx\n
         :param stream_id: stream id of the request
         :param body: if the request method is not get, then it needs to have body
+        :param check_headers_lowercase:  if this is True, the headers names will be checked to be lowercase
         :return:
         """
 
         if body:
             body = bytes(body, 'utf-8')
+
+        if check_headers_lowercase:
+            headers_string = utils.make_header_names_small(headers_string)
 
         request_frames = h2_frames.create_headers_frame(
             method=method,
