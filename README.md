@@ -8,9 +8,9 @@ HTTP/2 low level library based on Scapy which can be used for Single Packet Atta
 
 # TODO
 
-- Single Packet Attack - POST &...
+- [Single Packet Attack - POST](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples)
   - [x] implement
-- Single Packet Attack - GET
+- [Single Packet Attack - GET](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods)
   - [x] Content-Length: 1 Method
   - [x] POST Request with x-override-method: GET header
 - Response Parsing
