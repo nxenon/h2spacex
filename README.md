@@ -10,12 +10,9 @@ HTTP/2 low level library based on Scapy which can be used for Single Packet Atta
 
 - Single Packet Attack - POST &...
   - [x] implement
-  - [ ] test functionality on different H2 frameworks
 - Single Packet Attack - GET
-  - [ ] implement
-  - [ ] Content-Length: 1 Method
-  - [ ] POST Request with x-override-method: GET header
-  - [ ] test functionality on different H2 frameworks
+  - [x] Content-Length: 1 Method
+  - [x] POST Request with x-override-method: GET header
 - Response Parsing
   - [x] implement
   - [ ] implement threaded response parser
@@ -35,8 +32,8 @@ Some following statements are just ideas and not tested or implemented.
   - IP Fragmentation
 - Proxy the Single Packet Request through SOCKS
 - Single Packet Attack on GET Requests
-  - Content-Length: 1 Method (Idea by James Kettle)
-  - x-override-method: GET Method (Idea by James Kettle)
+  - [Content-Length: 1 Method](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods.md) (Idea by James Kettle)
+  - [x-override-method: GET](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods.md) Method (Idea by James Kettle)
   - Index HPACK Headers to Make GET Requests Smaller
   - HEADERS Frame without END_HEADER Flag
   - HEADERS Frame Without Some Pseudo Headers
