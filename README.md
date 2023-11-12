@@ -32,8 +32,8 @@ Some following statements are just ideas and not tested or implemented.
   - IP Fragmentation
 - Proxy the Single Packet Request through SOCKS
 - Single Packet Attack on GET Requests
-  - [Content-Length: 1 Method](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods.md) (Idea by James Kettle)
-  - [x-override-method: GET](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods.md) Method (Idea by James Kettle)
+  - [Content-Length: 1 Method](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods) (Idea by James Kettle)
+  - [x-override-method: GET](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods) Method (Idea by James Kettle)
   - Index HPACK Headers to Make GET Requests Smaller
   - HEADERS Frame without END_HEADER Flag
   - HEADERS Frame Without Some Pseudo Headers
