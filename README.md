@@ -59,6 +59,11 @@ h2_conn.setup_connection()
 ```
 see more examples in [Wiki Page](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples)
 
+# Examples
+See examples which contain some Portswigger race condition examples.
+
+[Examples Page](./examples/examples.md)
+
 # References & Resources
 
 - [James Kettle DEF CON 31 Presentation](https://youtu.be/tKJzsaB1ZvI?si=6uAuzOt3wjnEGYP6)
