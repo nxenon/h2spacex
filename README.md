@@ -62,7 +62,7 @@ see more examples in [Wiki Page](https://github.com/nxenon/h2spacex/wiki/Quick-S
 # Examples
 See examples which contain some Portswigger race condition examples.
 
-[Examples Page](./examples/examples.md)
+[Examples Page](./examples/README.md)
 
 # References & Resources
 

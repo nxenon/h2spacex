@@ -12,6 +12,7 @@ Change these parameters:
 - change CSRF tokens next to emails
 - change headers to new one (copy from burp)
 
+[Link to Script](portswigger-single-endpoint-rc.py)
 
 [Link to Lab](https://portswigger.net/web-security/race-conditions/lab-race-conditions-single-endpoint)
 
@@ -20,5 +21,7 @@ Change these parameters:
 - change hostname to new generated hostname
 - change headers to new one (copy from burp)
 - change CSRF Token
+
+[Link to Script](portswigger-limit-over-run-rc.py)
 
 [Link to Lab](https://portswigger.net/web-security/race-conditions/lab-race-conditions-limit-overrun)
