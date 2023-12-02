@@ -6,8 +6,11 @@
 
 HTTP/2 low level library based on Scapy which can be used for Single Packet Attack (Race Condition on H2)
 
-# TODO
+# Dive into Single Packet Attack Article
+I wrote an article and published it at InfoSec Write-ups:
+- [Dive into Single Packet Attack](https://infosecwriteups.com/dive-into-single-packet-attack-3d3849ffe1d2)
 
+# TODO
 - [Single Packet Attack - POST](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples)
   - [x] implement
 - [Single Packet Attack - GET](https://github.com/nxenon/h2spacex/wiki/GET-SPA-Methods)
