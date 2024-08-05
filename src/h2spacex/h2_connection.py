@@ -338,12 +338,13 @@ class H2Connection:
             stream_id=stream_id,
             body=None,
         )
-        # TODO
-        # get_request_frames.frames[0].flags.remove('ES')
-        # continuation_frame = h2.H2Frame(stream_id=stream_id, flags={'EH'}) / h2.H2ContinuationFrame()
-        # new_data_frame = h2.H2Frame(stream_id=stream_id, flags={'ES'}) / h2.H2DataFrame(data=b'A')
 
-        return get_request_frames
+        # TODO
+        get_request_frames.frames[0].flags.remove('ES')
+        # continuation_frame = h2.H2Frame(stream_id=stream_id, flags={'EH'}) / h2.H2ContinuationFrame()
+        new_data_frame = h2.H2Frame(stream_id=stream_id, flags={'ES'}) / h2.H2DataFrame(data=b'')
+
+        return get_request_frames, new_data_frame
 
     def create_simple_http2_request(
             self,
