@@ -3,7 +3,7 @@ from scapy.packet import NoPayload
 import gzip
 import brotli
 import zlib
-from .modules.logger import Logger
+from .logger import Logger
 logger = Logger()
 
 

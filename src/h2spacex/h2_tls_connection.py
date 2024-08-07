@@ -5,7 +5,7 @@ from .h2_connection import H2Connection
 
 from . import h2_frames
 import ssl
-from .modules.logger import Logger
+from .logger import Logger
 logger = Logger()
 
 

@@ -9,7 +9,7 @@ import scapy.contrib.http2 as h2
 from scapy.all import hex_bytes
 from . import h2_frames, utils
 import socks
-from .modules.logger import Logger
+from .logger import Logger
 logger = Logger()
 
 
