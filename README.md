@@ -82,6 +82,8 @@ James Kettle introduced a improved version of Single Packet Attack in Black Hat 
 
 You can implement this method easily using `send_ping_frame()` method.
 
+[New Method README (WIKI)](https://github.com/nxenon/h2spacex/wiki/SPA-New-Method)
+
 [Improved Version of SPA Sample Exploit](./examples/improved-spa-method.py)
 ## Reference of Improved Method:
 - [Listen to the whispers: web timing attacks that actually work](https://portswigger.net/research/listen-to-the-whispers-web-timing-attacks-that-actually-work)
