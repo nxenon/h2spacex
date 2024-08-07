@@ -2,6 +2,8 @@
 HTTP/2 Connection
 """
 import socket
+from scapy import config
+config.conf.logLevel = 40  # Set log level to ERROR to ignore warnings
 from threading import Thread
 import scapy.contrib.http2 as h2
 from scapy.all import hex_bytes
@@ -186,7 +188,7 @@ class H2Connection:
 
     def send_ping_frame(
             self,
-            ping_data="12345678"
+            ping_data=b"12345678"
     ):
         """
         send ping frame to make the idle connection active
