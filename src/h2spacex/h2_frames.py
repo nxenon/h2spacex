@@ -3,6 +3,8 @@ from scapy.packet import NoPayload
 import gzip
 import brotli
 import zlib
+from .modules.logger import Logger
+logger = Logger()
 
 
 def decompress_gzip_data(gzip_data: bytes):
@@ -11,7 +13,7 @@ def decompress_gzip_data(gzip_data: bytes):
         decompressed_content = gzip.decompress(gzip_data)
         decoded_content = decompressed_content.decode('utf-8')
     except Exception as e:
-        print('# Error in decompressing gzip encoded body : ' + str(e))
+        logger.logger_print('# Error in decompressing gzip encoded body : ' + str(e))
         return gzip_data
 
     return decoded_content
@@ -23,7 +25,7 @@ def decompress_br_data(br_data: bytes):
         decompressed_content = brotli.decompress(br_data)
         decoded_content = decompressed_content.decode('utf-8')
     except Exception as e:
-        print('# Error in decompressing br encoded body : ' + str(e))
+        logger.logger_print('# Error in decompressing br encoded body : ' + str(e))
         return br_data
 
     return decoded_content
@@ -35,7 +37,7 @@ def decompress_deflate_data(deflate_data: bytes):
         decompressed_content = zlib.decompress(deflate_data, -zlib.MAX_WBITS)
         decoded_content = decompressed_content.decode('utf-8')
     except Exception as e:
-        print('# Error in decompressing deflate encoded body : ' + str(e))
+        logger.logger_print('# Error in decompressing deflate encoded body : ' + str(e))
         return deflate_data
 
     return decoded_content
@@ -78,7 +80,7 @@ class FrameParser:
 
             for f in parsed_frames:
                 if is_verbose:
-                    print(f.show())
+                    logger.logger_print(f.show())
 
                 if isinstance(f.payload, h2.H2HeadersFrame):
                     self.parse_header_frame(f)
@@ -103,33 +105,33 @@ class FrameParser:
                     self.parse_reset_frame(f)
 
                 else:
-                    print('--frame--')
-                    print('Frame Type: ' + str(type(f.payload)) + ' / Type ID: ' + str(f.type))
+                    logger.logger_print('--frame--')
+                    logger.logger_print('Frame Type: ' + str(type(f.payload)) + ' / Type ID: ' + str(f.type))
                     f.show()
-                    print('##frame##')
+                    logger.logger_print('##frame##')
 
     def parse_settings_frame(self, settings_frame):
         if 'A' in settings_frame.flags:
-            print('* Server sent ACK for client SETTINGS frame')
+            logger.logger_print('* Server sent ACK for client SETTINGS frame')
 
         else:
-            print('* Server sent Settings frame with following values:')
-            print('// Server SETTINGS //')
-            print(settings_frame.settings)
-            print()
+            logger.logger_print('* Server sent Settings frame with following values:')
+            logger.logger_print('// Server SETTINGS //')
+            logger.logger_print(settings_frame.settings)
+            logger.logger_print()
             ack_settings_frame = create_settings_frame(is_ack=1)
             self.send_frame(ack_settings_frame)
-            print('+ Client sent ACK for server SETTINGS frame')
+            logger.logger_print('+ Client sent ACK for server SETTINGS frame')
 
     def parse_window_update_frame(self, windows_update_frame):
-        print('* Server sent WINDOW UPDATE frame with win_increase_size of: ' + str(windows_update_frame.win_size_incr))
+        logger.logger_print('* Server sent WINDOW UPDATE frame with win_increase_size of: ' + str(windows_update_frame.win_size_incr))
 
     def parse_ping_frame(self, ping_frame):
         if 'A' in ping_frame.flags:
-            print('* Server sent ACK for PING frame')
+            logger.logger_print('* Server sent ACK for PING frame')
 
     def parse_reset_frame(self, reset_frame):
-        print(f'# Server sent RESET frame for Stream ID: {reset_frame.stream_id}, with Err_Code: {reset_frame.error}')
+        logger.logger_print(f'# Server sent RESET frame for Stream ID: {reset_frame.stream_id}, with Err_Code: {reset_frame.error}')
 
     def parse_header_frame(self, header_frame):
         headers_string = self.get_headers_string_from_headers_frame(header_frame)
@@ -259,56 +261,56 @@ def parse_response_frames_bytes(
 
     raw_frame_bytes = frames_bytes
     if raw_frame_bytes:
-        print('+--------- START Response Frames ---------+')
+        logger.logger_print('+--------- START Response Frames ---------+')
         parsed_frames = h2.H2Seq(raw_frame_bytes).frames
         # print(parsed_frames)
 
         for f in parsed_frames:
             if is_verbose:
-                print(f.show())
+                logger.logger_print(f.show())
 
             if isinstance(f.payload, h2.H2HeadersFrame):
                 headers_string = _get_headers_string_from_headers_frame(f)
-                print(f'------ Headers Stream ID: {f.stream_id} ------')
-                print(headers_string)
+                logger.logger_print(f'------ Headers Stream ID: {f.stream_id} ------')
+                logger.logger_print(headers_string)
 
             elif isinstance(f.payload, h2.H2DataFrame):
-                print(f'------ Data Stream ID: {f.stream_id} ------')
+                logger.logger_print(f'------ Data Stream ID: {f.stream_id} ------')
                 with gzip.GzipFile(fileobj=gzip.io.BytesIO(f.data), mode='rb') as decompressed_file:
                     # Read the decompressed data
                     decompressed_content = decompressed_file.read()
 
                 # If the decompressed content is in bytes, you might want to decode it (if it contains text)
                 decoded_content = decompressed_content.decode('utf-8')
-                print(decoded_content)
+                logger.logger_print(decoded_content)
 
                 # print(f'------ Data Stream ID: {f.stream_id} ------')
                 # print(str(f.data))
 
             elif isinstance(f.payload, h2.H2SettingsFrame):
                 if socket_obj is not None:
-                    print('* got a Settings frame from server')
+                    logger.logger_print('* got a Settings frame from server')
                     settings_frame = create_settings_frame(is_ack=1)
                     socket_obj.send(bytes(settings_frame))
-                    print('* client sent ACK for server Settings')
+                    logger.logger_print('* client sent ACK for server Settings')
 
             elif isinstance(f.payload, h2.H2WindowUpdateFrame):
-                print('* server sent WindowUpdate Frame with win_increase_size of: ' + str(f.win_size_incr))
+                logger.logger_print('* server sent WindowUpdate Frame with win_increase_size of: ' + str(f.win_size_incr))
 
             elif isinstance(f.payload, h2.H2PingFrame):
-                print('* server sent ACK for PING frame')
+                logger.logger_print('* server sent ACK for PING frame')
 
             elif isinstance(f.payload, NoPayload):
                 if f.type == 4:  # settings frame
                     if 'A' in f.flags:
-                        print('* server sent ACK for client Settings')
+                        logger.logger_print('* server sent ACK for client Settings')
 
             else:
-                print('--frame--')
+                logger.logger_print('--frame--')
                 f.show()
-                print('##frame##')
+                logger.logger_print('##frame##')
 
-        print('+--------- END Response Frames ---------+')
+        logger.logger_print('+--------- END Response Frames ---------+')
 
 
 def create_ping_frame(ping_data='12345678', is_ack=0):
@@ -318,7 +320,7 @@ def create_ping_frame(ping_data='12345678', is_ack=0):
     """
 
     if len(ping_data) != 8:
-        print('ping frame payload must be 8 in length! --> ' + ping_data + ' is invalid!')
+        logger.logger_print('ping frame payload must be 8 in length! --> ' + ping_data + ' is invalid!')
         exit()
 
     if is_ack:

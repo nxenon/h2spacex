@@ -7,6 +7,8 @@ import scapy.contrib.http2 as h2
 from scapy.all import hex_bytes
 from . import h2_frames, utils
 import socks
+from .modules.logger import Logger
+logger = Logger()
 
 
 class H2Connection:
@@ -89,7 +91,7 @@ class H2Connection:
         sock.connect((self.hostname, self.port_number))
         self.raw_socket = sock
         sock_addr = sock.getsockname()
-        print(f'+ Connected through Proxy: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
+        logger.logger_print(f'+ Connected through Proxy: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
 
     def _create_raw_socket(self):
         """
@@ -108,11 +110,11 @@ class H2Connection:
 
         self.raw_socket = raw_socket
         sock_addr = raw_socket.getsockname()
-        print(f'+ Connected to: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
+        logger.logger_print(f'+ Connected to: {self.hostname}:{self.port_number} --> {sock_addr[0]}:{sock_addr[1]}')
 
     def _send_h2_connection_preface(self):
         self.send_bytes(self.H2_PREFACE)
-        print('+ H2 connection preface sent')
+        logger.logger_print('+ H2 connection preface sent')
 
     def get_using_socket(self):
         """
@@ -131,7 +133,7 @@ class H2Connection:
         try:
             using_socket.send(bytes_data)
         except Exception as e:
-            print('# Error in sending bytes: ' + str(e))
+            logger.logger_print('# Error in sending bytes: ' + str(e))
 
     def send_frames(self, frames):
         """
@@ -221,10 +223,10 @@ class H2Connection:
         client_initial_settings_frame = h2_frames.create_settings_frame(settings=settings_list)
 
         self.send_bytes(bytes(client_initial_settings_frame))
-        print('+ Client initial SETTINGS frame sent: ')
-        print('// Client SETTINGS //')
-        print(self.DEFAULT_SETTINGS)
-        print()
+        logger.logger_print('+ Client initial SETTINGS frame sent: ')
+        logger.logger_print('// Client SETTINGS //')
+        logger.logger_print(self.DEFAULT_SETTINGS)
+        logger.logger_print()
 
     def generate_stream_ids(self, number_of_streams):
         """
@@ -441,4 +443,4 @@ body:
 {body}
 +----- END Request Info -----+
 """
-        print(more_info_msg)
+        logger.logger_print(more_info_msg)

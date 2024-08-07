@@ -4,6 +4,8 @@ HTTP/2 Connection on TLS Context
 from .h2_connection import H2Connection
 from . import h2_frames
 import ssl
+from .modules.logger import Logger
+logger = Logger()
 
 
 class H2OnTlsConnection(H2Connection):
@@ -18,7 +20,8 @@ class H2OnTlsConnection(H2Connection):
             self._send_h2_connection_preface()  # send HTTP/2 Connection Preface
             self._send_client_initial_settings_frame()  # send client initial settings frame to server
         except Exception as e:
-            print('# Error in setting the connection up : ' + str(e))
+            t = '# Error in setting the connection up : ' + str(e)
+            logger.logger_print(t)
             exit(1)
 
         else:
@@ -36,7 +39,7 @@ class H2OnTlsConnection(H2Connection):
         self.raw_socket = None
         self.tls_socket = None
         self.is_connection_closed = True
-        print('- Connection closed')
+        logger.logger_print('- Connection closed')
 
     def __create_tls_context_on_raw_socket(self):
         # Create SSL context
@@ -48,7 +51,7 @@ class H2OnTlsConnection(H2Connection):
         # Wrap the raw socket with SSL/TLS
         ssl_socket = ssl_context.wrap_socket(self.raw_socket, server_hostname=self.hostname)
         self.tls_socket = ssl_socket
-        print('+ TLS connection established')
+        logger.logger_print('+ TLS connection established')
 
     def get_using_socket(self):
         """

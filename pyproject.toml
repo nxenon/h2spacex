@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "h2spacex"
-version = "0.1.17"
+version = "1.0.1"
 authors = [
   { name="nxenon", email="nasiri.aminm@gmail.com" },
 ]

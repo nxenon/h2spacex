@@ -1,6 +1,6 @@
 # <img src="https://github.com/nxenon/h2spacex/assets/61124903/fd6387bf-15e8-4a5d-816b-cf5e079e07cc" width="20%" valign="middle" alt="H2SpaceX" />&nbsp;&nbsp; H2SpaceX
 
-[![pypi: 0.1.17](https://img.shields.io/badge/pypi-0.1.17-8c34eb.svg)](https://pypi.org/project/h2spacex/)
+[![pypi: 1.0.1](https://img.shields.io/badge/pypi-1.0.1-8c34eb.svg)](https://pypi.org/project/h2spacex/)
 [![Python: 3.10](https://img.shields.io/badge/Python->=3.10-blue.svg)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
@@ -46,6 +46,14 @@ H2SpaceX works with Python 3 (preferred: >=3.10)
 
     pip install h2spacex
 
+
+## Error in Installation
+if you get errors of scapy:
+
+
+    pip install --upgrade scapy
+
+
 # Quick Start
 You can import the HTTP/2 TLS Connection and set up the connection. After setting up the connection, you can do other things:
 
@@ -66,6 +74,17 @@ see more examples in [Wiki Page](https://github.com/nxenon/h2spacex/wiki/Quick-S
 See examples which contain some Portswigger race condition examples.
 
 [Examples Page](./examples)
+
+# Improved Single Packet Attack Method (Black Hat 2024)
+James Kettle introduced a improved version of Single Packet Attack in Black Hat 2024:
+
+![Impvoved Version Image](https://github.com/user-attachments/assets/bf7bf88c-937a-4a95-899b-990bc6fc6a23)
+
+You can implement this method easily using `send_ping_frame()` method.
+
+[Improved Version of SPA Sample Exploit](./examples/improved-spa-method.py)
+## Reference of Improved Method:
+- [Listen to the whispers: web timing attacks that actually work](https://portswigger.net/research/listen-to-the-whispers-web-timing-attacks-that-actually-work)
 
 # References & Resources
 
