@@ -18,7 +18,8 @@ I wrote an article and published it at InfoSec Write-ups:
   - [x] POST Request with x-override-method: GET header
 - Response Parsing
   - [x] implement
-  - [ ] implement threaded response parser
+  - [x] implement threaded response parser
+  - [x] add response times in nano seconds for timing attacks
   - [x] Body Decompression
     - [x] gzip
     - [x] br
