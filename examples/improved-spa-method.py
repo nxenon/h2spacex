@@ -60,11 +60,21 @@ h2_conn.send_ping_frame()
 # send remaining data frames
 h2_conn.send_frames(temp_data_bytes)
 
-# parse response frames
-resp = h2_conn.read_response_from_socket(_timeout=3)
-frame_parser = h2_frames.FrameParser(h2_connection=h2_conn)
-frame_parser.add_frames(resp)
-frame_parser.show_response_of_sent_requests()
+h2_conn.start_thread_response_parsing(_timeout=3)
+while not h2_conn.is_threaded_response_finished:
+    sleep(1)
 
-# close the connection to stop response parsing and exit the script
+if h2_conn.is_threaded_response_finished is None:
+    print('Error has occurred!')
+    exit()
+
+frame_parser = h2_conn.threaded_frame_parser
+
 h2_conn.close_connection()
+
+for x in frame_parser.headers_and_data_frames.keys():
+    sid = str(x)
+    d = frame_parser.headers_and_data_frames[x]
+    print(f'Stream ID: {sid}, response nano seconds: {d["nano_seconds"]}')
+    print(f'Headers: {str(d["header"])}')
+    print(f'Body (DATA): {str(d["data"])}')

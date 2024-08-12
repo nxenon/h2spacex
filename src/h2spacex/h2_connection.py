@@ -2,6 +2,8 @@
 HTTP/2 Connection
 """
 import socket
+import time
+
 from scapy import config
 config.conf.logLevel = 40  # Set log level to ERROR to ignore warnings
 from threading import Thread
@@ -23,6 +25,9 @@ class H2Connection:
         self.read_timeout = read_timeout  # timeout when reading response from socket
         self.last_used_stream_id = 1  # define last stream ID used to continue stream IDs
         self.is_connection_closed = True  # if connection is not closed, this variable is False
+        # if is_threaded_response_finished is true it means that start_thread_response_parsing function is finished
+        self.is_threaded_response_finished = None
+        self.threaded_frame_parser : h2_frames.FrameParser = None
         # HTTP/2 Connection Preface
         self.H2_PREFACE = hex_bytes('505249202a20485454502f322e300d0a0d0a534d0d0a0d0a')
         self.DEFAULT_SETTINGS = {
@@ -58,25 +63,33 @@ class H2Connection:
         :return:
         """
 
-    def __thread_response_frame_parsing(self, _timeout=0.5):
+    def __thread_response_frame_parsing(self, _timeout=0.5, print_responses=False):
         """
         method which is thread oriented for response parsing
         :param _timeout:
+        :param print_responses: if this is true, response headers and content, will be printed
         :return:
         """
         try:
-            while not self.is_connection_closed:
-                resp = self.read_response_from_socket(_timeout=_timeout)
-                if resp:
-                    self.old_parse_frames_bytes(resp)
+            self.read_response_from_socket_with_time(_timeout=_timeout)
 
         except KeyboardInterrupt:
             exit()
 
-    def start_thread_response_parsing(self, _timeout=0.5):
+        self.is_threaded_response_finished = True
+
+    def start_thread_response_parsing(self, _timeout=0.5, print_responses=False):
+        """
+        method which is thread oriented for response parsing
+        :param _timeout:
+        :param print_responses: if this is true, response headers and content, will be printed
+        :return:
+        """
+        self.is_threaded_response_finished = False
         try:
-            Thread(target=self.__thread_response_frame_parsing, args=(_timeout,)).start()
+            Thread(target=self.__thread_response_frame_parsing, args=(_timeout, print_responses,)).start()
         except KeyboardInterrupt:
+            self.is_threaded_response_finished = None
             exit()
 
     def _create_socks_socket(self):
@@ -176,6 +189,35 @@ class H2Connection:
 
         return response
 
+    def read_response_from_socket_with_time(self, _timeout=None) -> None:
+        """
+        read from socket(raw or TLS socket), and return bytes
+        :return:
+        """
+
+        if _timeout is None:
+            timeout = self.read_timeout
+        else:
+            timeout = _timeout
+
+        using_socket = self.get_using_socket()
+        try:
+            using_socket.settimeout(timeout)
+
+        except Exception as e:
+            print('Error Occurred in setting timeout: ' + str(e))
+            return
+        # self.new_parse_frames_bytes(resp)
+        while True:
+            try:
+                data = using_socket.recv(4096)
+                if not data:
+                    break
+            except socket.timeout:
+                break
+
+            self.new_parse_frames_bytes(data, resp_ns_time=time.time_ns())
+
     def old_parse_frames_bytes(self, frame_bytes, is_verbose=False):
         """
         parse frames bytes. for example parse response frames from server
@@ -185,6 +227,22 @@ class H2Connection:
         """
 
         h2_frames.parse_response_frames_bytes(frame_bytes, socket_obj=self.get_using_socket(), is_verbose=is_verbose)
+
+    def new_parse_frames_bytes(self, frame_bytes, is_verbose=False, resp_ns_time=None):
+        """
+        parse frames bytes. for example parse response frames from server
+        :param frame_bytes: bytes type of frames
+        :param is_verbose: if is_verbose is True, then the method of .show() will be invoked for the frame
+        :param resp_ns_time: response time of request in nano seconds
+        :return:
+        """
+
+        # h2_frames.parse_response_frames_bytes(frame_bytes, socket_obj=self.get_using_socket(), is_verbose=is_verbose)
+        if self.threaded_frame_parser is None:
+            self.threaded_frame_parser = h2_frames.FrameParser(
+                h2_connection=self,
+            )
+        self.threaded_frame_parser.add_frames(frame_bytes, resp_ns_time=resp_ns_time)
 
     def send_ping_frame(
             self,

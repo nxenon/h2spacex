@@ -75,14 +75,15 @@ See examples which contain some Portswigger race condition examples.
 
 [Examples Page](./examples)
 
-# Improved Single Packet Attack Method (Black Hat 2024)
-James Kettle introduced a improved version of Single Packet Attack in Black Hat 2024:
+# Enhanced Single Packet Attack Method (Black Hat 2024) for Timing Attacks
+James Kettle introduced an improved version of Single Packet Attack in Black Hat 2024 for timing attacks:
 
 ![Impvoved Version Image](https://github.com/user-attachments/assets/bf7bf88c-937a-4a95-899b-990bc6fc6a23)
 
 You can implement this method easily using `send_ping_frame()` method.
 
-[New Method README (WIKI)](https://github.com/nxenon/h2spacex/wiki/SPA-New-Method)
+See this Wiki and `Parse Response (Threaded) + Response Times for Timing Attacks` part:
+- [New Method README (WIKI)](https://github.com/nxenon/h2spacex/wiki/SPA-New-Method)
 
 [Improved Version of SPA Sample Exploit](./examples/improved-spa-method.py)
 ## Reference of Improved Method:

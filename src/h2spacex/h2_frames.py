@@ -5,6 +5,7 @@ import brotli
 import zlib
 from .logger import Logger
 logger = Logger()
+import time
 
 
 def decompress_gzip_data(gzip_data: bytes):
@@ -74,7 +75,7 @@ class FrameParser:
 
             print(str(data))
 
-    def add_frames(self, frames_bytes: bytes, is_verbose=False):
+    def add_frames(self, frames_bytes: bytes, is_verbose=False, resp_ns_time=None):
         if frames_bytes:
             parsed_frames = h2.H2Seq(frames_bytes).frames
 
@@ -83,7 +84,7 @@ class FrameParser:
                     logger.logger_print(f.show())
 
                 if isinstance(f.payload, h2.H2HeadersFrame):
-                    self.parse_header_frame(f)
+                    self.parse_header_frame(f, ns_time=resp_ns_time)
 
                 elif isinstance(f.payload, h2.H2DataFrame):
                     self.parse_data_frame(f)
@@ -133,11 +134,15 @@ class FrameParser:
     def parse_reset_frame(self, reset_frame):
         logger.logger_print(f'# Server sent RESET frame for Stream ID: {reset_frame.stream_id}, with Err_Code: {reset_frame.error}')
 
-    def parse_header_frame(self, header_frame):
+    def parse_header_frame(self, header_frame, ns_time=None):
         headers_string = self.get_headers_string_from_headers_frame(header_frame)
         stream_id = header_frame.stream_id
         if stream_id not in self.headers_and_data_frames:
-            self.headers_and_data_frames[stream_id] = {'header': headers_string, 'data': b''}
+            self.headers_and_data_frames[stream_id] = {
+                'header': headers_string,
+                'data': b'',
+                'nano_seconds': ns_time,
+            }
         else:
             self.headers_and_data_frames[stream_id]['headers'] += headers_string
 
@@ -148,8 +153,13 @@ class FrameParser:
     def parse_data_frame(self, data_frame):
         stream_id = data_frame.stream_id
         if stream_id not in self.headers_and_data_frames:
-            self.headers_and_data_frames[stream_id] = {'header': '', 'data': data_frame.data}
+            self.headers_and_data_frames[stream_id] = {
+                'header': '',
+                'data': data_frame.data,
+                # 'nano_seconds': time.time_ns()
+            }
         else:
+            # self.headers_and_data_frames[stream_id]['nano_seconds'] = time.time_ns()
             self.headers_and_data_frames[stream_id]['data'] += data_frame.data
 
     def send_frame(self, frame):
