@@ -74,7 +74,7 @@ class H2Connection:
             self.read_response_from_socket_with_time(_timeout=_timeout)
 
         except KeyboardInterrupt:
-            exit()
+            return
 
         self.is_threaded_response_finished = True
 
@@ -90,7 +90,7 @@ class H2Connection:
             Thread(target=self.__thread_response_frame_parsing, args=(_timeout, print_responses,)).start()
         except KeyboardInterrupt:
             self.is_threaded_response_finished = None
-            exit()
+            return
 
     def _create_socks_socket(self):
         """

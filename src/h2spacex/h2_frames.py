@@ -331,7 +331,7 @@ def create_ping_frame(ping_data='12345678', is_ack=0):
 
     if len(ping_data) != 8:
         logger.logger_print('ping frame payload must be 8 in length! --> ' + ping_data + ' is invalid!')
-        exit()
+        raise ValueError('ping frame payload must be 8 in length! --> ' + ping_data + ' is invalid!')
 
     if is_ack:
         ping_frame = h2.H2Frame(flags={'A'})

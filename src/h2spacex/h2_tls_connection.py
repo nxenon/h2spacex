@@ -23,7 +23,7 @@ class H2OnTlsConnection(H2Connection):
         except Exception as e:
             t = '# Error in setting the connection up : ' + str(e)
             logger.logger_print(t)
-            exit(1)
+            raise e
 
         else:
             self.is_connection_closed = False
