@@ -43,7 +43,7 @@ Some following statements are just ideas and not tested or implemented.
   - HEADERS Frame Without Some Pseudo Headers
 
 # Installation
-H2SpaceX works with Python 3 (preferred: >=3.10)
+H2SpaceX works with Python 3 (preferred: >=3.8.8)
 
     pip install h2spacex
 
