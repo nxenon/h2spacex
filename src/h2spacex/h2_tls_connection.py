@@ -10,9 +10,11 @@ logger = Logger()
 
 
 class H2OnTlsConnection(H2Connection):
-    def __init__(self, hostname, port_number, read_timeout=3, proxy_hostname=None, proxy_port_number=None):
+    def __init__(self, hostname, port_number, read_timeout=3,
+                 proxy_hostname=None, proxy_port_number=None, ssl_log_file_path=None):
         super().__init__(hostname, port_number, read_timeout=read_timeout, proxy_hostname=proxy_hostname, proxy_port_number=proxy_port_number)
         self.tls_socket = None  # TLS Socket Context
+        self.ssl_log_file_path = ssl_log_file_path
 
     def setup_connection(self):
         try:
@@ -45,6 +47,8 @@ class H2OnTlsConnection(H2Connection):
     def __create_tls_context_on_raw_socket(self):
         # Create SSL context
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+        if self.ssl_log_file_path is not None:
+            ssl_context.keylog_filename = self.ssl_log_file_path
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
         ssl_context.set_alpn_protocols(['h2'])

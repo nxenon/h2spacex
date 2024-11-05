@@ -5,7 +5,7 @@ with open('./README.md', 'r') as readme_file:
 
 setup(
     name='h2spacex',
-    version='1.1.2',
+    version='1.2.0',
     description='HTTP/2 Single Packet Attack low level library based on Scapy',
     package_dir={"": "src"},
     packages=find_packages(where="src"),
@@ -21,7 +21,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=['scapy==2.5.0', 'brotlipy==0.7.0', 'PySocks==1.7.1'],
-    python_requires='>=3.10',
+    python_requires='>=3.8.8',
     extras_requires={
         'dev': 'twine==4.0.2'
     },
