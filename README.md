@@ -27,6 +27,16 @@ I wrote an article and published it at InfoSec Write-ups:
 - [Proxy](https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples#proxy-example)
   - [x] Socks5 Proxy
 
+## Change Log & Beta Versions
+
+- 1.2.1b0
+  - merged [PR-6](https://github.com/nxenon/h2spacex/pull/6)
+    - implement setup_connection for H2Connection (no TLS)
+  - merged [PR-7](https://github.com/nxenon/h2spacex/pull/7)
+    - normalize HTTP header names using Parser instead of regex
+  - to install this version: `pip3 install h2spacex==1.2.1b0`
+
+
 # More Research
 Some following statements are just ideas and not tested or implemented.
 
