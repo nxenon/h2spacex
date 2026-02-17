@@ -57,6 +57,7 @@ class FrameParser:
         # H2 Connection Object (H2Connection OR H2OnTlsConnection)
         self.h2_connection = h2_connection
         self.headers_table = h2.HPackHdrTable()
+        self._recv_buffer = b''
 
     def show_response_of_sent_requests(self):
         for s_id in self.headers_and_data_frames.keys():
@@ -66,7 +67,7 @@ class FrameParser:
             print(headers)
             print('-Body-')
             data = self.headers_and_data_frames[s_id]['data']
-            if 'content-encoding: gzip' in headers:
+            if 'content-encoding: gzip' in headers.lower():
                 data = decompress_gzip_data(data)
             elif 'content-encoding: br' in headers:
                 data = decompress_br_data(data)
@@ -76,40 +77,66 @@ class FrameParser:
             print(str(data))
 
     def add_frames(self, frames_bytes: bytes, is_verbose=False, resp_ns_time=None):
-        if frames_bytes:
-            parsed_frames = h2.H2Seq(frames_bytes).frames
+        if not frames_bytes:
+            return
 
-            for f in parsed_frames:
-                if is_verbose:
-                    logger.logger_print(f.show())
+        # Append new TCP data to buffer
+        self._recv_buffer += frames_bytes
+        
+        while True:
+            # Need at least 9 bytes for HTTP/2 frame header
+            if len(self._recv_buffer) < 9:
+                return
 
-                if isinstance(f.payload, h2.H2HeadersFrame):
-                    self.parse_header_frame(f, ns_time=resp_ns_time)
+            # Extract frame length (first 3 bytes)
+            length = int.from_bytes(self._recv_buffer[0:3], byteorder='big')
+            total_frame_length = 9 + length
 
-                elif isinstance(f.payload, h2.H2DataFrame):
-                    self.parse_data_frame(f)
+            # Wait until full frame is available
+            if len(self._recv_buffer) < total_frame_length:
+                return
 
-                elif isinstance(f.payload, h2.H2SettingsFrame):
-                    self.parse_settings_frame(f)
+            # Slice one full frame
+            frame_bytes = self._recv_buffer[:total_frame_length]
+            self._recv_buffer = self._recv_buffer[total_frame_length:]
 
-                elif isinstance(f.payload, h2.H2WindowUpdateFrame):
-                    self.parse_window_update_frame(f)
+            # Parse exactly ONE frame
+            try:
+                parsed = h2.H2Seq(frame_bytes).frames
+            except Exception as e:
+                logger.logger_print(f'HTTP/2 frame parse error: {e}')
+                continue
 
-                elif isinstance(f.payload, h2.H2PingFrame):
-                    self.parse_ping_frame(f)
+            if not parsed:
+                continue
 
-                elif isinstance(f.payload, NoPayload):
-                    if f.type == 4:  # settings frame
-                        self.parse_settings_frame(f)
+            f = parsed[0]
 
-                elif isinstance(f.payload, h2.H2ResetFrame):
-                    self.parse_reset_frame(f)
+            if is_verbose:
+                logger.logger_print(f.show())
 
-                else:
-                    logger.logger_print('--frame--')
-                    logger.logger_print('Frame Type: ' + str(type(f.payload)) + ' / Type ID: ' + str(f.type))
-                    f.show()
-                    logger.logger_print('##frame##')
+            # ---- NORMAL DISPATCH ----
+            if isinstance(f.payload, h2.H2HeadersFrame):
+                self.parse_header_frame(f, ns_time=resp_ns_time)
+
+            elif isinstance(f.payload, h2.H2DataFrame):
+                self.parse_data_frame(f)
+
+            elif isinstance(f.payload, h2.H2SettingsFrame):
+                self.parse_settings_frame(f)
+
+            elif isinstance(f.payload, h2.H2WindowUpdateFrame):
+                self.parse_window_update_frame(f)
+
+            elif isinstance(f.payload, h2.H2PingFrame):
+                self.parse_ping_frame(f)
+
+            elif isinstance(f.payload, h2.H2ResetFrame):
+                self.parse_reset_frame(f)
+
+            else:
+                logger.logger_print(f'Unhandled frame type: {type(f.payload)}', is_msg_debug=True)
+
 
     def parse_settings_frame(self, settings_frame):
         if 'A' in settings_frame.flags:
@@ -144,7 +171,7 @@ class FrameParser:
                 'nano_seconds': ns_time,
             }
         else:
-            self.headers_and_data_frames[stream_id]['headers'] += headers_string
+            self.headers_and_data_frames[stream_id]['header'] += headers_string
 
     def get_headers_string_from_headers_frame(self, headers_frame):
         headers_string = self.headers_table.gen_txt_repr(headers_frame.hdrs)
