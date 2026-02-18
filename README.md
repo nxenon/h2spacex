@@ -29,12 +29,13 @@ I wrote an article and published it at InfoSec Write-ups:
 
 ## Change Log & Beta Versions
 
-- 1.2.1b0
+- 1.2.1
   - merged [PR-6](https://github.com/nxenon/h2spacex/pull/6)
     - implement setup_connection for H2Connection (no TLS)
   - merged [PR-7](https://github.com/nxenon/h2spacex/pull/7)
     - normalize HTTP header names using Parser instead of regex
-  - to install this version: `pip3 install h2spacex==1.2.1b0`
+  - fixed [Issue 8](https://github.com/nxenon/h2spacex/issues/8)
+    - parsing issue with raw data frames (packets)
 
 
 # More Research
