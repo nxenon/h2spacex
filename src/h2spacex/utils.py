@@ -17,5 +17,7 @@ def make_header_names_small(headers_string: str) -> str:
     """
     Normalize HTTP headers: lowercase header names, preserve values.
     """
+    headers_string = headers_string.strip()
     headers = Parser().parsestr(headers_string)
-    return "".join(f"{k.lower()}: {v}\n" for k, v in headers.items())
+    h = "".join(f"{k.lower()}: {v}\n" for k, v in headers.items())
+    return h.strip()
