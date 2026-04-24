@@ -5,6 +5,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
 HTTP/2 low level library based on Scapy which can be used for Single Packet Attack (Race Condition on H2)
+- This library was part of an academic research with title of [QUIC-er Races: HTTP/3 won’t save you from TOCTOU vulnerabilities](https://link.springer.com/article/10.1007/s10207-026-01258-6).
+
 
 # Dive into Single Packet Attack Article
 I wrote an article and published it at InfoSec Write-ups:
