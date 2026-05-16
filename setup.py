@@ -20,7 +20,7 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
-    install_requires=['scapy>=2.5.0,<3.0', 'brotlicffi>=1.0', 'PySocks>=1.7.1,<2.0'],
+    install_requires=['scapy>=2.5.0,<3.0', 'Brotli>=1.0', 'PySocks>=1.7.1,<2.0'],
     python_requires='>=3.8.8',
     extras_requires={
         'dev': 'twine==4.0.2'
