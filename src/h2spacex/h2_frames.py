@@ -5,7 +5,6 @@ import brotli
 import zlib
 from .logger import Logger
 logger = Logger()
-import time
 
 
 def decompress_gzip_data(gzip_data: bytes):

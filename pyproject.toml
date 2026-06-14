@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "h2spacex"
-version = "1.2.1"
+version = "1.2.2"
 authors = [
   { name="nxenon", email="nasiri.aminm@gmail.com" },
 ]
@@ -24,14 +24,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[options]
-package_dir= "."
-
-[options.packages.find]
-where="src"
+[project.optional-dependencies]
+dev = ["twine==4.0.2"]
 
 [project.urls]
 "Homepage" = "https://github.com/nxenon/h2spacex"
 "Bug Tracker" = "https://github.com/nxenon/h2spacex/issues"
 "Wiki" = "https://github.com/nxenon/h2spacex/wiki"
 "Examples" = "https://github.com/nxenon/h2spacex/wiki/Quick-Start-Examples"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,6 +1,6 @@
 # <img src="https://github.com/nxenon/h2spacex/assets/61124903/fd6387bf-15e8-4a5d-816b-cf5e079e07cc" width="20%" valign="middle" alt="H2SpaceX" />&nbsp;&nbsp; H2SpaceX
 
-[![pypi: 1.2.1](https://img.shields.io/badge/pypi-1.2.1-8c34eb.svg)](https://pypi.org/project/h2spacex/)
+[![pypi: 1.2.2](https://img.shields.io/badge/pypi-1.2.2-8c34eb.svg)](https://pypi.org/project/h2spacex/)
 [![Python: 3.8.8](https://img.shields.io/badge/Python-==3.8.x-blue.svg)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-006112.svg)](https://github.com/nxenon/h2spacex/blob/main/LICENSE)
 
@@ -30,6 +30,15 @@ I wrote an article and published it at InfoSec Write-ups:
   - [x] Socks5 Proxy
 
 ## Change Log & Beta Versions
+
+- 1.2.2
+  - packaging: consolidated build config into `pyproject.toml` and removed `setup.py`
+    - fixed invalid `[options]` sections so package discovery is defined correctly
+    - exposed the `dev` extra (`twine`) that the old `setup.py` typo had dropped
+  - code cleanup
+    - removed unused import and a redundant header-normalization call in GET request builder
+    - GET requests now respect `check_headers_lowercase=False` (consistent with other request methods)
+  - added `tests/` (unit tests for header utilities) and `CONTRIBUTING.md` (build & release guide)
 
 - 1.2.1
   - merged [PR-6](https://github.com/nxenon/h2spacex/pull/6)

@@ -396,8 +396,6 @@ class H2Connection:
         # headers_string = headers_string.strip()
         # headers_string += '\ncontent-length: 1\n'
 
-        headers_string = utils.make_header_names_small(headers_string)
-
         get_request_frames = h2_frames.create_headers_frame(
             method=method,
             authority=authority,
